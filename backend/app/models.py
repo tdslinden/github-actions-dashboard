@@ -10,6 +10,7 @@ class TriggeringActor(BaseModel):
 
 class WorkflowRun(BaseModel):
     """Model matching GitHub API response"""
+
     id: int
     name: str
     event: str
@@ -29,10 +30,13 @@ class WorkflowRun(BaseModel):
 
 class WorkflowSummary(BaseModel):
     """Simplified model for frontend consumption"""
+
     workflow_name: str
     workflow_path: str
     repo_name: str
-    status: Literal["running", "waiting", "queued", "succeeded", "failed", "cancelled", "skipped"]
+    status: Literal[
+        "running", "waiting", "queued", "succeeded", "failed", "cancelled", "skipped"
+    ]
     last_run_id: int
     last_run_url: str
     last_run_time: datetime

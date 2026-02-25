@@ -42,20 +42,11 @@ async def get_workflows() -> list[WorkflowSummary]:
 
 @app.get("/health")
 async def health():
-    """Health check endpoint"""
-    workflow_service = WorkflowService()
-    core_rate_limit = await workflow_service.check_rate_limit()
-    print(f"Health check - rate limit status: {core_rate_limit}")
-    if "error" in core_rate_limit:
-        return {"status": "unhealthy", "details": core_rate_limit["error"]}
-    return {
-        "status": "healthy",
-        "remaining_rate_limit": core_rate_limit.get("remaining", "unknown"),
-        "rate_limit_reset": core_rate_limit.get("reset", "unknown"),
-    }
+    return {"status": "healthy"}
 
 
 if __name__ == "__main__":
     import uvicorn
+
     print("Starting GitHub Actions Dashboard API on http://localhost:8000")
     uvicorn.run(app, host="0.0.0.0", port=8000)

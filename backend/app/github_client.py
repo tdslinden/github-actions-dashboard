@@ -21,13 +21,15 @@ class GitHubClient:
         """Check rate limit before making requests"""
         # Only check every 60 seconds (cache it)
         now = time.time()
-        if (self._last_rate_limit_check is None or 
-            now - self._last_rate_limit_check > 60):
-            
+        if (
+            self._last_rate_limit_check is None
+            or now - self._last_rate_limit_check > 60
+        ):
+
             rate_limit = await self.check_rate_limit()
             self._cached_rate_limit = rate_limit
             self._last_rate_limit_check = now
-            
+
             if rate_limit and rate_limit["remaining"] and rate_limit["remaining"] < 10:
                 logger.warning(f"Low rate limit: {rate_limit['remaining']} remaining")
                 # TODO: Implement backoff or alerting if rate limit is critically low
@@ -80,9 +82,9 @@ class GitHubClient:
                         data = response.json()
                         workflow_runs_data = data.get("workflow_runs", [])
                         return [
-                                WorkflowRun(**self._transform_run_data(run_data))
-                                for run_data in workflow_runs_data
-                            ]
+                            WorkflowRun(**self._transform_run_data(run_data))
+                            for run_data in workflow_runs_data
+                        ]
                     case 403:
                         print(f"Auth error for {repo_name}")
                         return []
@@ -96,7 +98,9 @@ class GitHubClient:
                         print(f"Unexpected status code {status_code} for {repo_name}")
                         return []
             except httpx.HTTPError as e:
-                print(f"HTTP Exception for {e.request.url} when accessing {repo_name}: {e}")
+                print(
+                    f"HTTP Exception for {e.request.url} when accessing {repo_name}: {e}"
+                )
                 return []
 
     async def check_rate_limit(self) -> Optional[dict]:

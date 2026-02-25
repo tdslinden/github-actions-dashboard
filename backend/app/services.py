@@ -11,19 +11,8 @@ class WorkflowService:
     def __init__(self):
         self.github_client = GitHubClient()
 
-    async def check_rate_limit(self) -> dict:
-        """Check the rate limit status of the GitHub API"""
-        try:
-            core_rate_limit = await self.github_client.check_rate_limit()
-            return core_rate_limit
-        except Exception as e:
-            print(f"Error fetching rate limit: {e}")
-            logger.error(f"Error fetching rate limit: {e}")
-            return {"error": f"Unable to fetch rate limit status -- {e}"}
-
     async def get_all_workflows(self) -> List[WorkflowSummary]:
         """Fetch and process workflows for all configured repos"""
-        # TODO: Implement this
         repos_list = get_repos_list()
         all_summaries: List[WorkflowSummary] = []
 
@@ -53,13 +42,6 @@ class WorkflowService:
         3. Map status/conclusion to simplified status
         4. Convert to WorkflowSummary
         """
-        # TODO: Implement this
-        # Hint: Use a dict to group by workflow path
-        # {
-        #   ".github/workflows/ci.yml": [run1, run2, run3],
-        #   ".github/workflows/deploy.yml": [run4, run5]
-        # }
-        # Then for each group, take the first run (most recent)
 
         workflow_summaries: List[WorkflowSummary] = []
         workflow_groups = {}
