@@ -14,29 +14,46 @@ class GitHubClient:
             "Authorization": f"Bearer {self.token}",
             "X-GitHub-Api-Version": "2022-11-28",
         }
+        self._last_rate_limit_check = None
+        self._cached_rate_limit = {"remaining": None, "reset": None}
 
-def _transform_run_data(run_data: dict) -> dict:
-    """Transform GitHub API run data to match WorkflowRun model."""
-    return {
-        "id": run_data["id"],
-        "name": run_data["name"],
-        "event": run_data["event"],
-        "created_at": run_data["created_at"],
-        "run_started_at": run_data.get("run_started_at"),
-        "branch": run_data["head_branch"],
-        "commit_sha": run_data["head_sha"],
-        "display_title": run_data["display_title"],
-        "status": run_data["status"],
-        "html_url": run_data["html_url"],
-        "conclusion": run_data.get("conclusion"),
-        "run_number": run_data["run_number"],
-        "run_attempt": run_data["run_attempt"],
-        "triggering_actor": {
-            "username": run_data["triggering_actor"]["login"],
-            "avatar_url": run_data["triggering_actor"]["avatar_url"],
-        },
-        "workflow_path": run_data["path"],
-    }
+    async def _ensure_rate_limit_available(self):
+        """Check rate limit before making requests"""
+        # Only check every 60 seconds (cache it)
+        now = time.time()
+        if (self._last_rate_limit_check is None or 
+            now - self._last_rate_limit_check > 60):
+            
+            rate_limit = await self.check_rate_limit()
+            self._cached_rate_limit = rate_limit
+            self._last_rate_limit_check = now
+            
+            if rate_limit and rate_limit["remaining"] and rate_limit["remaining"] < 10:
+                logger.warning(f"Low rate limit: {rate_limit['remaining']} remaining")
+                # TODO: Implement backoff or alerting if rate limit is critically low
+
+    def _transform_run_data(self, run_data: dict) -> dict:
+        """Transform GitHub API run data to match WorkflowRun model."""
+        return {
+            "id": run_data["id"],
+            "name": run_data["name"],
+            "event": run_data["event"],
+            "created_at": run_data["created_at"],
+            "run_started_at": run_data.get("run_started_at"),
+            "branch": run_data["head_branch"],
+            "commit_sha": run_data["head_sha"],
+            "display_title": run_data["display_title"],
+            "status": run_data["status"],
+            "html_url": run_data["html_url"],
+            "conclusion": run_data.get("conclusion"),
+            "run_number": run_data["run_number"],
+            "run_attempt": run_data["run_attempt"],
+            "triggering_actor": {
+                "username": run_data["triggering_actor"]["login"],
+                "avatar_url": run_data["triggering_actor"]["avatar_url"],
+            },
+            "workflow_path": run_data["path"],
+        }
 
     async def fetch_repo_runs(
         self, repo_name: str, per_page: int = 50
@@ -47,6 +64,8 @@ def _transform_run_data(run_data: dict) -> dict:
         Returns empty list if repo not found or on error.
         Logs errors but doesn't raise (fail gracefully).
         """
+
+        await self._ensure_rate_limit_available()
 
         url = f"{self.base_url}/repos/{self.org}/{repo_name}/actions/runs"
         params = {"per_page": per_page}
