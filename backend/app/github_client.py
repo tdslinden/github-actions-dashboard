@@ -1,7 +1,11 @@
 import httpx
-from typing import List
+import time
+import logging
+from typing import List, Optional
 from app.models import WorkflowRun
 from app.config import settings
+
+logger = logging.getLogger(__name__)
 
 
 class GitHubClient:
@@ -30,7 +34,7 @@ class GitHubClient:
             self._cached_rate_limit = rate_limit
             self._last_rate_limit_check = now
 
-            if rate_limit and rate_limit["remaining"] and rate_limit["remaining"] < 10:
+            if rate_limit and rate_limit["remaining"] < 10:
                 logger.warning(f"Low rate limit: {rate_limit['remaining']} remaining")
                 # TODO: Implement backoff or alerting if rate limit is critically low
 
@@ -73,7 +77,7 @@ class GitHubClient:
         params = {"per_page": per_page}
 
         status_code = None
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(timeout=10.0) as client:
             try:
                 response = await client.get(url, headers=self.headers, params=params)
                 status_code = response.status_code
@@ -86,19 +90,21 @@ class GitHubClient:
                             for run_data in workflow_runs_data
                         ]
                     case 403:
-                        print(f"Auth error for {repo_name}")
+                        logger.error(f"Auth error for {repo_name}")
                         return []
                     case 404:
-                        print(f"Repo not found: {repo_name}")
+                        logger.error(f"Repo not found: {repo_name}")
                         return []
                     case 429:
-                        print(f"Rate limit exceeded for {repo_name}")
+                        logger.error(f"Rate limit exceeded for {repo_name}")
                         return []
                     case _:
-                        print(f"Unexpected status code {status_code} for {repo_name}")
+                        logger.error(
+                            f"Unexpected status code {status_code} for {repo_name}"
+                        )
                         return []
             except httpx.HTTPError as e:
-                print(
+                logger.error(
                     f"HTTP Exception for {e.request.url} when accessing {repo_name}: {e}"
                 )
                 return []
@@ -107,7 +113,7 @@ class GitHubClient:
         """Check current rate limit status"""
         url = f"{self.base_url}/rate_limit"
         status_code = None
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(timeout=10.0) as client:
             try:
                 response = await client.get(url, headers=self.headers)
                 status_code = response.status_code
@@ -121,14 +127,16 @@ class GitHubClient:
                             reset = core_data.get("reset")
                             return {"remaining": remaining, "reset": reset}
                         else:
-                            print(f"Core rate limit data not found in response: {data}")
+                            logger.error(
+                                f"Core rate limit data not found in response: {data}"
+                            )
                             return None
                     case 404:
-                        print(f"Rate limit endpoint not found for {url}")
+                        logger.error(f"Rate limit endpoint not found for {url}")
                         return None
                     case _:
-                        print(f"Unexpected status code {status_code} for {url}")
+                        logger.error(f"Unexpected status code {status_code} for {url}")
                         return None
             except httpx.HTTPError as e:
-                print(f"HTTP Exception for {e.request.url}: {e}")
+                logger.error(f"HTTP Exception for {e.request.url}: {e}")
                 return None
