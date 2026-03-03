@@ -1,7 +1,8 @@
 from typing import List
 from app.github_client import GitHubClient
 from app.models import WorkflowRun, WorkflowSummary
-from app.config import get_repos_list
+from app.config import get_repos_list, settings
+from datetime import datetime, timezone, timedelta
 import logging
 
 logger = logging.getLogger(__name__)
@@ -45,31 +46,44 @@ class WorkflowService:
         workflow_groups = {}
 
         for run in runs:
-            workflow_groups.setdefault(run.workflow_path, []).append(run)
+            # Create composite key: "path::branch"
+            key = f"{run.workflow_path}::{run.branch}"
+            workflow_groups.setdefault(key, []).append(run)
 
         if not workflow_groups:
             logger.warning(f"No workflow runs found for repo {repo_name}")
             return []
 
-        for workflow_path, runs in workflow_groups.items():
+        now = datetime.now(timezone.utc)
+        retention_cutoff = now - timedelta(hours=settings.retention_days * 24)
+
+        for group_key, runs in workflow_groups.items():
             sorted_runs = sorted(runs, key=lambda r: r.created_at, reverse=True)
             most_recent_run = sorted_runs[0]
-            summary = WorkflowSummary(
-                workflow_name=most_recent_run.name,
-                workflow_path=workflow_path,
-                repo_name=repo_name,
-                status=self._map_status(
-                    most_recent_run.status, most_recent_run.conclusion
-                ),
-                last_run_id=most_recent_run.id,
-                last_run_url=str(most_recent_run.html_url),
-                last_run_time=most_recent_run.created_at,
-                triggered_by=most_recent_run.triggering_actor.username,
-                run_number=most_recent_run.run_number,
-                run_attempt=most_recent_run.run_attempt,
-            )
-            workflow_summaries.append(summary)
+
+            is_recent = most_recent_run.created_at >= retention_cutoff
+
+            if is_recent:
+                summary = self._create_summary(most_recent_run, repo_name)
+                workflow_summaries.append(summary)
+
         return workflow_summaries
+
+    def _create_summary(self, run: WorkflowRun, repo_name: str) -> WorkflowSummary:
+        """Helper to create WorkflowSummary from WorkflowRun"""
+        return WorkflowSummary(
+            workflow_name=run.name,
+            workflow_path=run.workflow_path,
+            repo_name=repo_name,
+            branch=run.branch,
+            status=self._map_status(run.status, run.conclusion),
+            last_run_id=run.id,
+            last_run_url=str(run.html_url),
+            last_run_time=run.created_at,
+            triggered_by=run.triggering_actor.username,
+            run_number=run.run_number,
+            run_attempt=run.run_attempt,
+        )
 
     def _map_status(self, status: str, conclusion: str) -> str:
         """Map GitHub status/conclusion to simplified status"""

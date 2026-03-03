@@ -43,3 +43,4 @@ class WorkflowSummary(BaseModel):
     triggered_by: str
     run_number: int
     run_attempt: int
+    branch: str

@@ -4,7 +4,8 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     github_token: str
     github_org: str
-    repos: str  # Comma-separated
+    repos: str 
+    retention_days: int = 7
 
     class Config:
         env_file = ".env"
