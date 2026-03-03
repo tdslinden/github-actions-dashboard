@@ -17,14 +17,12 @@ class WorkflowService:
         all_summaries: List[WorkflowSummary] = []
 
         for repo in repos_list:
-            print(f"Fetching workflows for repo: {repo}")
             logger.info(f"Fetching workflows for repo: {repo}")
             try:
                 runs = await self.github_client.fetch_repo_runs(repo)
                 summaries = self._process_runs_to_summary(runs, repo)
                 all_summaries.extend(summaries)
             except Exception as e:
-                print(f"Error processing repo {repo}: {e}")
                 logger.error(f"Error processing repo {repo}: {e}")
                 continue  # skip to next repo on error
 
@@ -50,14 +48,12 @@ class WorkflowService:
             workflow_groups.setdefault(run.workflow_path, []).append(run)
 
         if not workflow_groups:
-            print(f"No workflow runs found for repo {repo_name}")
             logger.warning(f"No workflow runs found for repo {repo_name}")
             return []
 
         for workflow_path, runs in workflow_groups.items():
-            most_recent_run = runs[
-                0
-            ]  # assuming runs are in descending order by created_at
+            sorted_runs = sorted(runs, key=lambda r: r.created_at, reverse=True)
+            most_recent_run = sorted_runs[0]
             summary = WorkflowSummary(
                 workflow_name=most_recent_run.name,
                 workflow_path=workflow_path,
