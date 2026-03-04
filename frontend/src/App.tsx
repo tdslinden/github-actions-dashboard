@@ -1,35 +1,31 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useWorkflowData } from './hooks/useWorkflowData';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const { workflows, loading, error, lastUpdated } = useWorkflowData();
+
+  if (loading) return <div className="p-8">Loading...</div>;
+  if (error) return <div className="p-8 text-red-600">Error: {error}</div>;
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
+    <div className="p-8">
+      <h1 className="text-2xl font-bold mb-4">GitHub Actions Dashboard</h1>
+      <p className="text-gray-600 mb-4">
+        Showing {workflows.length} workflows
+        {lastUpdated && ` • Last updated: ${lastUpdated.toLocaleTimeString()}`}
       </p>
-    </>
-  )
+
+      <div className="space-y-2">
+        {workflows.slice(0, 5).map((wf) => (
+          <div key={wf.last_run_id} className="p-4 border rounded">
+            <div className="font-medium">{wf.workflow_name}</div>
+            <div className="text-sm text-gray-600">
+              {wf.repo_name} • {wf.branch} • {wf.status}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 }
 
-export default App
+export default App;
