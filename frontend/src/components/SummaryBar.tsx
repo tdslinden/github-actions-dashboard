@@ -1,5 +1,6 @@
 import type { WorkflowStatus, WorkflowSummary } from '@/types/workflow';
-import { Button } from './button';
+import { Button } from './ui/button';
+import { getStatusConfig } from '@/config/statusStyles';
 
 interface SummaryBarProps {
   workflows: WorkflowSummary[];
@@ -30,16 +31,29 @@ export function SummaryBar({ workflows, activeFilter, onFilterChange }: SummaryB
 
   return (
     <div className="flex items-center gap-2 flex-wrap">
-      Summary:
-      <Button variant="outline" size="sm">
+      <Button
+        variant={activeFilter === 'all' ? 'default' : 'outline'}
+        size="sm"
+        onClick={() => onFilterChange('all')}
+      >
         All: {workflows.length}
       </Button>
+      
       {statuses.map((status) => {
-        const count = counts[status] || 0;
-        if (count == 0) return null;
+        const count = counts[status];
+        if (count === 0) return null;
+
+        const config = getStatusConfig(status);
+        const Icon = config.icon;
 
         return (
-          <Button variant="outline" size="sm">
+          <Button
+            variant={activeFilter === status ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => onFilterChange(status)}
+            className={`${config.textColor} ${config.bgColor} ${config.borderColor}`}
+          >
+            <Icon className={config.iconColor} />
             {status}: {count}
           </Button>
         );
