@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { formatDistanceToNow } from 'date-fns';
+import { ExternalLinkIcon } from 'lucide-react'
 
 export function WorkflowCard(workflow: WorkflowSummary) {
   const statusConfig = getStatusConfig(workflow.status)
@@ -20,11 +21,14 @@ export function WorkflowCard(workflow: WorkflowSummary) {
     <a className="hover:scale-[1.02] transition-all duration-200" href={workflow.html_url} target="_blank" rel="noopener noreferrer">
       <Card className={`mx-auto w-[600px] max-w-sm ${statusConfig.borderColor} bg-[#0e121b]`} style={{ boxShadow: statusConfig.glowColor }}>
         <CardHeader className="text-white">
-          <CardTitle className="flex items-center gap-2">
-            <StatusIcon className={workflow.status === 'running' ? `${statusColor} animate-spin` : statusColor} />
-            <Badge className={`text-base ${statusConfig.badgeBgColor}`}>
-              {statusConfig.label}
-            </Badge>
+          <CardTitle className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <StatusIcon className={workflow.status === 'running' ? `${statusColor} animate-spin` : statusColor} />
+              <Badge className={`text-base ${statusConfig.badgeBgColor}`}>
+                {statusConfig.label}
+              </Badge>
+            </div>
+            <ExternalLinkIcon className="text-gray-400" size={16} />
           </CardTitle>
         </CardHeader>
         <CardContent>
