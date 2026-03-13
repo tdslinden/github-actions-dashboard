@@ -83,6 +83,7 @@ class WorkflowService:
             triggered_by=run.triggering_actor.username,
             run_number=run.run_number,
             run_attempt=run.run_attempt,
+            html_url=run.html_url,
         )
 
     def _map_status(self, status: str, conclusion: str) -> str:
