@@ -1,4 +1,5 @@
 import { useWorkflowData } from './hooks/useWorkflowData';
+import  {WorkflowCard} from '@/components/WorkflowCard';
 
 function App() {
   const { workflows, loading, error, lastUpdated } = useWorkflowData();
@@ -9,19 +10,9 @@ function App() {
   return (
     <div className="p-8">
       <h1 className="text-2xl font-bold mb-4">GitHub Actions Dashboard</h1>
-      <p className="text-gray-600 mb-4">
-        Showing {workflows.length} workflows
-        {lastUpdated && ` • Last updated: ${lastUpdated.toLocaleTimeString()}`}
-      </p>
-
-      <div className="space-y-2">
+      <div className="flex items-center gap-6 mb-4">
         {workflows.slice(0, 5).map((wf) => (
-          <div key={wf.last_run_id} className="p-4 border rounded">
-            <div className="font-medium">{wf.workflow_name}</div>
-            <div className="text-sm text-gray-600">
-              {wf.repo_name} • {wf.branch} • {wf.status}
-            </div>
-          </div>
+          <WorkflowCard key={wf.last_run_id} {...wf} />
         ))}
       </div>
     </div>
