@@ -44,3 +44,4 @@ class WorkflowSummary(BaseModel):
     run_number: int
     run_attempt: int
     branch: str
+    html_url: HttpUrl

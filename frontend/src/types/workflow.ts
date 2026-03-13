@@ -19,4 +19,5 @@ export interface WorkflowSummary {
   triggered_by: string;
   run_number: number;
   run_attempt: number;
+  html_url: string;
 }
