@@ -1,5 +1,5 @@
 import { useWorkflowData } from './hooks/useWorkflowData';
-import  {WorkflowCard} from '@/components/WorkflowCard';
+import { WorkflowCard } from '@/components/WorkflowCard';
 
 function App() {
   const { workflows, loading, error, lastUpdated } = useWorkflowData();

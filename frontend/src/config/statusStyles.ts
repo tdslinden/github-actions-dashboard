@@ -1,11 +1,11 @@
-import { 
-  CheckCircle2, 
-  XCircle, 
-  Loader2, 
-  Clock, 
-  AlertCircle, 
-  SkipForward, 
-  HelpCircle 
+import {
+  CheckCircle2,
+  XCircle,
+  Loader2,
+  Clock,
+  AlertCircle,
+  SkipForward,
+  HelpCircle,
 } from 'lucide-react';
 import type { WorkflowStatus } from '@/types/workflow';
 
