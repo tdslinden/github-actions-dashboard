@@ -19,6 +19,9 @@ export const STATUS_CONFIG = {
     iconColor: 'text-green-500',
     glowColor: '0 0 12px 2px rgba(34,197,94,0.5)',
     badgeBgColor: 'bg-green-900/40 text-green-400',
+    bgActive: 'bg-green-600',
+    bgInactive: 'bg-green-500/30',
+    textInactive: 'text-green-100',
   },
   failed: {
     label: 'Failed',
@@ -29,6 +32,9 @@ export const STATUS_CONFIG = {
     iconColor: 'text-red-500',
     glowColor: '0 0 12px 2px rgba(239,68,68,0.5)',
     badgeBgColor: 'bg-red-900/40 text-red-400',
+    bgActive: 'bg-red-600',
+    bgInactive: 'bg-red-500/30',
+    textInactive: 'text-red-100',
   },
   running: {
     label: 'Running',
@@ -39,6 +45,9 @@ export const STATUS_CONFIG = {
     iconColor: 'text-blue-500',
     glowColor: '0 0 12px 2px rgba(59,130,246,0.5)',
     badgeBgColor: 'bg-blue-900/40 text-blue-400',
+    bgActive: 'bg-blue-600',
+    bgInactive: 'bg-blue-500/30',
+    textInactive: 'text-blue-100',
   },
   queued: {
     label: 'Queued',
@@ -49,6 +58,9 @@ export const STATUS_CONFIG = {
     iconColor: 'text-orange-500',
     glowColor: '0 0 12px 2px rgba(249,115,22,0.5)',
     badgeBgColor: 'bg-orange-900/40 text-orange-400',
+    bgActive: 'bg-orange-600',
+    bgInactive: 'bg-orange-500/30',
+    textInactive: 'text-orange-100',
   },
   cancelled: {
     label: 'Cancelled',
@@ -59,6 +71,9 @@ export const STATUS_CONFIG = {
     iconColor: 'text-gray-500',
     glowColor: '0 0 12px 2px rgba(107,114,128,0.4)',
     badgeBgColor: 'bg-gray-800/60 text-gray-400',
+    bgActive: 'bg-gray-500',
+    bgInactive: 'bg-gray-400/30',
+    textInactive: 'text-gray-100',
   },
   skipped: {
     label: 'Skipped',
@@ -69,6 +84,9 @@ export const STATUS_CONFIG = {
     iconColor: 'text-yellow-500',
     glowColor: '0 0 12px 2px rgba(234,179,8,0.5)',
     badgeBgColor: 'bg-yellow-900/40 text-yellow-400',
+    bgActive: 'bg-yellow-600',
+    bgInactive: 'bg-yellow-500/30',
+    textInactive: 'text-yellow-100',
   },
   waiting: {
     label: 'Waiting',
@@ -79,6 +97,9 @@ export const STATUS_CONFIG = {
     iconColor: 'text-purple-500',
     glowColor: '0 0 12px 2px rgba(168,85,247,0.5)',
     badgeBgColor: 'bg-purple-900/40 text-purple-400',
+    bgActive: 'bg-purple-600',
+    bgInactive: 'bg-purple-500/30',
+    textInactive: 'text-purple-100',
   },
   unknown: {
     label: 'Unknown',
@@ -89,6 +110,9 @@ export const STATUS_CONFIG = {
     iconColor: 'text-purple-500',
     glowColor: '0 0 12px 2px rgba(168,85,247,0.5)',
     badgeBgColor: 'bg-purple-900/40 text-purple-400',
+    bgActive: 'bg-purple-600',
+    bgInactive: 'bg-purple-500/30',
+    textInactive: 'text-purple-100',
   },
 } as const;
 

@@ -12,11 +12,11 @@ interface SummaryBarProps {
 const statuses: WorkflowStatus[] = [
   'succeeded',
   'failed',
+  'cancelled',
   'running',
   'waiting',
   'queued',
   'skipped',
-  'cancelled',
 ];
 
 export function SummaryBar({ workflows, activeFilter, onFilterChange }: SummaryBarProps) {
@@ -31,45 +31,56 @@ export function SummaryBar({ workflows, activeFilter, onFilterChange }: SummaryB
   console.log(counts);
 
   return (
-    <div className="flex items-center gap-2 flex-wrap">
-      <Button
-        variant={activeFilter === 'all' ? 'default' : 'outline'}
-        size="sm"
-        onClick={() => onFilterChange('all')}
-        className="flex flex-col items-center justify-center min-w-[110px] min-h-[80px] px-7 py-4 bg-gray-100 border border-gray-400 text-gray-800"
-      >
-        <div className="flex flex-col items-center justify-center h-full w-full">
-          <Circle className="text-gray-500 mb-1" />
-          <span className="text-sm font-semibold leading-tight capitalize text-center">
-            All
-          </span>
-          <span className="text-[13px] text-muted-foreground mt-1 font-medium tracking-wide text-center">
-            {workflows.length}
-          </span>
-        </div>
-      </Button>
+    <div className="flex items-center gap-4 flex-wrap justify-start w-full py-2">
 
-      {statuses.map((status) => {
-        const count = counts[status] ?? 0;
-        // Always render the button for alignment, but visually dim if count is 0
-        const config = getStatusConfig(status);
-        const Icon = config.icon;
+      {/* Config for "all" button */}
+      {(() => {
+        const allConfig = {
+          label: 'All',
+          icon: Circle,
+          bgActive: 'bg-teal-600',
+          bgInactive: 'bg-teal-500/30',
+          textInactive: 'text-teal-100',
+        };
+        const isActive = activeFilter === 'all';
         return (
           <Button
-            variant={activeFilter === status ? 'default' : 'outline'}
-            size="sm"
+            variant={isActive ? 'default' : 'outline'}
+            size="lg"
+            onClick={() => onFilterChange('all')}
+            className={`flex flex-col items-start justify-center w-[170px] h-[90px] px-6 py-4 border-none shadow-none transition-all duration-200 rounded-xl ${isActive ? `${allConfig.bgActive} text-white scale-105 z-10` : `${allConfig.bgInactive} ${allConfig.textInactive}`}`}
+          >
+            <div className="flex flex-row items-center gap-3 h-full w-full">
+                <Circle className={isActive ? 'text-white' : 'text-teal-200'} size={40} />
+              <div className="flex flex-col items-start justify-center">
+                <span className="text-lg font-bold capitalize">{allConfig.label}</span>
+                <span className="text-base font-semibold tracking-wide">{workflows.length}</span>
+              </div>
+            </div>
+          </Button>
+        );
+      })()}
+
+      {/* Config for individual status buttons */}
+      {statuses.map((status) => {
+        const count = counts[status] ?? 0;
+        const config = getStatusConfig(status);
+        const Icon = config.icon;
+        const isActive = activeFilter === status;
+        return (
+          <Button
+            variant={isActive ? 'default' : 'outline'}
+            size="lg"
             onClick={() => onFilterChange(status)}
-            className={`${config.textColor} ${config.bgColor} ${config.borderColor} flex flex-col items-center justify-center min-w-[110px] min-h-[80px] px-7 py-4 ${count === 0 ? 'opacity-50 pointer-events-none' : ''}`}
+            className={`flex flex-col items-start justify-center w-[170px] h-[90px] px-6 py-4 border-none shadow-none transition-all duration-200 rounded-xl ${isActive ? `${config.bgActive} text-white scale-105 z-10` : `${config.bgInactive} ${config.textInactive}`} ${count === 0 ? 'opacity-50 pointer-events-none' : ''}`}
             key={status}
           >
-            <div className="flex flex-col items-center justify-center h-full w-full">
-              <Icon className={config.iconColor + ' mb-1'} />
-              <span className="text-sm font-semibold leading-tight capitalize text-center">
-                {status}
-              </span>
-              <span className="text-[13px] text-muted-foreground mt-1 font-medium tracking-wide text-center">
-                {count}
-              </span>
+            <div className="flex flex-row items-center gap-3 h-full w-full">
+                <Icon className={isActive ? 'text-white' : config.iconColor} size={40} />
+              <div className="flex flex-col items-start justify-center">
+                <span className="text-lg font-bold capitalize">{config.label}</span>
+                <span className="text-base font-semibold tracking-wide">{count}</span>
+              </div>
             </div>
           </Button>
         );
