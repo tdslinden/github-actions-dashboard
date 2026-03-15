@@ -28,8 +28,6 @@ export function SummaryBar({ workflows, activeFilter, onFilterChange }: SummaryB
     {} as Record<WorkflowStatus, number>
   );
 
-  console.log(counts);
-
   return (
     <div className="flex items-center gap-4 flex-wrap justify-start w-full py-2">
       {/* Config for "all" button */}

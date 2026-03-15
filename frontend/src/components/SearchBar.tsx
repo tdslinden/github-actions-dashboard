@@ -8,8 +8,6 @@ interface SearchBarProps {
 }
 
 export function SearchBar({ value, onChange }: SearchBarProps) {
-  console.log(value);
-
   return (
     <div className="relative w-full max-w-sm">
       <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-white" />
