@@ -32,7 +32,6 @@ export function SummaryBar({ workflows, activeFilter, onFilterChange }: SummaryB
 
   return (
     <div className="flex items-center gap-4 flex-wrap justify-start w-full py-2">
-
       {/* Config for "all" button */}
       {(() => {
         const allConfig = {
@@ -51,7 +50,7 @@ export function SummaryBar({ workflows, activeFilter, onFilterChange }: SummaryB
             className={`flex flex-col items-start justify-center w-[170px] h-[90px] px-6 py-4 border-none shadow-none transition-all duration-200 rounded-xl ${isActive ? `${allConfig.bgActive} text-white scale-105 z-10` : `${allConfig.bgInactive} ${allConfig.textInactive}`}`}
           >
             <div className="flex flex-row items-center gap-3 h-full w-full">
-                <Circle className={isActive ? 'text-white' : 'text-teal-200'} size={40} />
+              <Circle className={isActive ? 'text-white' : 'text-teal-200'} size={40} />
               <div className="flex flex-col items-start justify-center">
                 <span className="text-lg font-bold capitalize">{allConfig.label}</span>
                 <span className="text-base font-semibold tracking-wide">{workflows.length}</span>
@@ -76,7 +75,7 @@ export function SummaryBar({ workflows, activeFilter, onFilterChange }: SummaryB
             key={status}
           >
             <div className="flex flex-row items-center gap-3 h-full w-full">
-                <Icon className={isActive ? 'text-white' : config.iconColor} size={40} />
+              <Icon className={isActive ? 'text-white' : config.iconColor} size={40} />
               <div className="flex flex-col items-start justify-center">
                 <span className="text-lg font-bold capitalize">{config.label}</span>
                 <span className="text-base font-semibold tracking-wide">{count}</span>
