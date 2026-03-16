@@ -6,7 +6,11 @@ import { Badge } from '@/components/ui/badge';
 import { formatDistanceToNow } from 'date-fns';
 import { ExternalLinkIcon } from 'lucide-react';
 
-export function WorkflowCard(workflow: WorkflowSummary) {
+interface WorkflowCardProps {
+  workflow: WorkflowSummary;
+}
+
+export function WorkflowCard({ workflow }: WorkflowCardProps) {
   const statusConfig = getStatusConfig(workflow.status);
   const StatusIcon = statusConfig.icon;
   const statusColor = statusConfig.iconColor;
@@ -20,7 +24,7 @@ export function WorkflowCard(workflow: WorkflowSummary) {
       rel="noopener noreferrer"
     >
       <Card
-        className={`mx-auto w-[600px] max-w-sm ${statusConfig.borderColor} bg-[#0e121b]`}
+        className={`w-full ${statusConfig.borderColor} bg-[#0e121b]`}
         style={{ boxShadow: statusConfig.glowColor }}
       >
         <CardHeader className="text-white">
@@ -39,11 +43,11 @@ export function WorkflowCard(workflow: WorkflowSummary) {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-xl font-bold">{workflow.workflow_name}</p>
+          <p className="text-lg font-bold">{workflow.workflow_name}</p>
           <p className="text-gray-400">{workflow.repo_name}</p>
           <p className="text-gray-400">{workflow.branch}</p>
-          <p className="mt-10">@{workflow.triggered_by}</p>
-          <p>
+          <p className="text-sm mt-10">@{workflow.triggered_by}</p>
+          <p className="text-sm">
             {lastRunTime} &#x2022; Run #{workflow.run_number}
           </p>
         </CardContent>
