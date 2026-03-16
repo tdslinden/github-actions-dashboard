@@ -17,7 +17,7 @@ export function WorkflowGrid({ workflows }: WorkflowGridProps) {
   return (
     <div className="grid grid-cols-[repeat(auto-fill,minmax(350px,1fr))] gap-8">
       {workflows.map((workflow) => (
-        <WorkflowCard key={`${workflow.last_run_id}`} workflow={workflow} />
+        <WorkflowCard key={`${workflow.repo_name}-${workflow.last_run_id}`} workflow={workflow} />
       ))}
     </div>
   );
