@@ -7,7 +7,11 @@ interface WorkflowGridProps {
 
 export function WorkflowGrid({ workflows }: WorkflowGridProps) {
   if (workflows.length === 0) {
-    return <div className="flex items-center justify-center min-h-[400px] text-white text-xl">No workflows found.</div>;
+    return (
+      <div className="flex items-center justify-center min-h-[400px] text-white text-xl">
+        No workflows found.
+      </div>
+    );
   }
 
   return (
