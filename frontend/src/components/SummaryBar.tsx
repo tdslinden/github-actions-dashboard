@@ -45,7 +45,7 @@ export function SummaryBar({ workflows, activeFilter, onFilterChange }: SummaryB
             variant={isActive ? 'default' : 'outline'}
             size="lg"
             onClick={() => onFilterChange('all')}
-            className={`flex flex-col items-start justify-center w-[170px] h-[90px] px-6 py-4 border-none shadow-none transition-all duration-200 rounded-xl ${isActive ? `${allConfig.bgActive} text-white scale-105 z-10` : `${allConfig.bgInactive} ${allConfig.textInactive}`}`}
+            className={`cursor-pointer flex flex-col items-start justify-center w-[170px] h-[90px] px-6 py-4 border-none shadow-none transition-all duration-200 rounded-xl ${isActive ? `${allConfig.bgActive} text-white scale-105 z-10` : `${allConfig.bgInactive} ${allConfig.textInactive}`}`}
           >
             <div className="flex flex-row items-center gap-3 h-full w-full">
               <Circle className={isActive ? 'text-white' : 'text-teal-200'} size={40} />
@@ -69,7 +69,7 @@ export function SummaryBar({ workflows, activeFilter, onFilterChange }: SummaryB
             variant={isActive ? 'default' : 'outline'}
             size="lg"
             onClick={() => onFilterChange(status)}
-            className={`flex flex-col items-start justify-center w-[170px] h-[90px] px-6 py-4 border-none shadow-none transition-all duration-200 rounded-xl ${isActive ? `${config.bgActive} text-white scale-105 z-10` : `${config.bgInactive} ${config.textInactive}`} ${count === 0 ? 'opacity-50 pointer-events-none' : ''}`}
+            className={`cursor-pointer flex flex-col items-start justify-center w-[170px] h-[90px] px-6 py-4 border-none shadow-none transition-all duration-200 rounded-xl ${isActive ? `${config.bgActive} text-white scale-105 z-10` : `${config.bgInactive} ${config.textInactive}`} ${count === 0 ? 'opacity-50 pointer-events-none' : ''}`}
             key={status}
           >
             <div className="flex flex-row items-center gap-3 h-full w-full">

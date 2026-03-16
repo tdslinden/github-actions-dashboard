@@ -1,5 +1,5 @@
-import { useWorkflowData } from './hooks/useWorkflowData';
-import { WorkflowCard } from '@/components/WorkflowCard';
+import { useWorkflowData } from '@/hooks/useWorkflowData';
+import { WorkflowGrid } from '@/components/WorkflowGrid';
 import { SummaryBar } from '@/components/SummaryBar';
 import { SearchBar } from '@/components/SearchBar';
 import { LoadingSkeleton } from '@/components/LoadingSkeleton';
@@ -26,7 +26,11 @@ function App() {
 
   return (
     <div className="p-8">
-      <h1 className="text-2xl font-bold mb-4">GitHub Actions Dashboard</h1>
+      <h1 className="text-3xl font-bold mb-2 text-white">GitHub Actions Dashboard</h1>
+      <p className="text-gray-600 mb-4">
+        Showing {workflows.length} workflows
+        {lastUpdated && ` • Last updated: ${lastUpdated.toLocaleTimeString()}`}
+      </p>
       <div className="mb-4">
         <SummaryBar
           workflows={workflows}
@@ -34,13 +38,11 @@ function App() {
           onFilterChange={setActiveFilter}
         />
       </div>
-      <div className="mb-4">
+      <div className="mb-10">
         <SearchBar value={searchQuery} onChange={setSearchQuery} />
       </div>
-      <div className="flex items-center gap-6 mb-4">
-        {workflows.slice(0, 5).map((wf) => (
-          <WorkflowCard key={wf.last_run_id} {...wf} />
-        ))}
+      <div>
+        <WorkflowGrid workflows={workflows} />
       </div>
     </div>
   );
