@@ -5,6 +5,7 @@ import { SearchBar } from '@/components/SearchBar';
 import { LoadingSkeleton } from '@/components/LoadingSkeleton';
 import type { WorkflowStatus } from './types/workflow';
 import { useState } from 'react';
+import { Header } from './components/Header';
 
 function App() {
   const { workflows, loading, error, lastUpdated } = useWorkflowData();
@@ -26,11 +27,7 @@ function App() {
 
   return (
     <div className="p-8">
-      <h1 className="text-3xl font-bold mb-2 text-white">GitHub Actions Dashboard</h1>
-      <p className="text-gray-600 mb-4">
-        Showing {workflows.length} workflows
-        {lastUpdated && ` • Last updated: ${lastUpdated.toLocaleTimeString()}`}
-      </p>
+      <Header lastUpdated={lastUpdated} />
       <div className="mb-4">
         <SummaryBar
           workflows={workflows}
